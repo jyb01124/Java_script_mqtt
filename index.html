@@ -65,6 +65,20 @@
         $('#ws').prepend('<li>' + topic + ' = ' + payload + '</li>');
     };
 
+	function onMessagePublished(){
+		var sentence = $('#sentence').val();
+		var _topic = $('#topic_').val();
+		
+		alert(sentence);
+		alert(_topic);
+		
+        mqtt.subscribe(_topic, {qos: 0});
+		
+        message = new Paho.MQTT.Message(sentence);
+        message.destinationName = _topic;
+        mqtt.send(message);
+      }
+
 
     $(document).ready(function() {
         MQTTconnect();
@@ -75,9 +89,13 @@
   <body>
     <h1>Mosquitto Websockets</h1>
     <div>
-        <div>Subscribed to <input type='text' id='topic' disabled />
-        Status: <input type='text' id='status' size="80" disabled /></div>
+        <div>Subscribed to <input type='text' id='topic' disabled /><br>
+        Status: <input type='text' id='status' size="80" disabled /><br>
+		topic: <input type='text' id='topic_' size="20" /><br>
+		Sentence: <input type='text' id='sentence' size="80" /> 
+		<INPUT type='BUTTON' value='Publish' onclick='onMessagePublished()'>
 
+	</div>
         <ul id='ws' style="font-family: 'Courier New', Courier, monospace;"></ul>
     </div>
   </body>
